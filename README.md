@@ -1,4 +1,8 @@
 # LeetCode Curated List of 75 Problems.
+[Leetcode Article Reference](https://leetcode.com/discuss/general-discussion/460599/blind-75-leetcode-questions)
+[Github Gist](https://gist.github.com/krishnadey30/88c4e2f601e96597974c00185e479532)
+[Leetcode List](https://leetcode.com/list/xi4ci4ig/)
+[Hackernoon - 14 Patterns to Ace Any Coding Interview Question](https://hackernoon.com/14-patterns-to-ace-any-coding-interview-question-c5bb3357f6ed)
 
 ## Algorithms
 
@@ -12,7 +16,8 @@
 * [Matrix](#matrix)
 * [String](#string)
 * [Tree](#tree)
-* [Heap](#heap)
+* [Heap/Priority Queue](#heap-priority-queue)
+* [Binary Search](#binary-search)
 * [Recursion](#recursion)
 * [Sliding Window](#sliding-window)
 * [Greedy and Backtracking](#greedy-and-backtracking)
@@ -8136,6 +8141,26 @@ fun reorderList(head: ListNode?) {
 }
 ```
 
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+## Matrix
+| #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                   |
+| ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | ---------------------- |
+| 0073  | [Set Matrix Zeroes](#lc-73set-matrix-seroes)   | https://leetcode.com/problems/set-matrix-zeroes/                              | _O(m * n)_ | _O(1)_  | Medium     |              |                        |
+| 0054  | [Spiral Matrix](#lc-54spiral-matrix)           | https://leetcode.com/problems/spiral-matrix/                                  | _O(m * n)_ | _O(1)_  | Medium     |              |                        |
+| 0048  | [Rotate Image](#lc-48rotate-image)             | https://leetcode.com/problems/rotate-image/                                   | _O(n^2)_   | _O(1)_  | Medium     |              |                        |
+| 0079  | [Word Search](#lc-79word-search)               | https://leetcode.com/problems/word-search/                                    | _O(m * n * 3^l)_ | _O(l)_ | Medium |             |                        |
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
 ## String
 | #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                   |
 | ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | ---------------------- |
@@ -9309,3 +9334,92 @@ fun main(args: Array<String>) {
 </div>
 <br/>
 
+## Tree
+| #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                   |
+| ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | ---------------------- |
+| 0104  | [Maximum Depth of Binary Tree](#lc-104maximum-depth-of-binary-tree) | https://leetcode.com/problems/maximum-depth-of-binary-tree/ | _O(n)_ | _O(h)_ | Easy     |              |                        |
+| 0100  | [Same Tree](#lc-100same-tree) | https://leetcode.com/problems/same-tree/                                                       | _O(n)_ | _O(h)_    | Easy     |              |                        |
+| 0226  | [Invert Binary Tree](#lc-226invert-binary-tree) | https://leetcode.com/problems/invert-binary-tree/                            | _O(n)_ | _O(h), O(w)_ | Easy  |              |                        |
+| 0124  | [Binary Tree Maximum Path Sum](#lc-124binary-tree-maximum-path-sum) | https://leetcode.com/problems/binary-tree-maximum-path-sum/ | _O(n)_ | _O(h)_ | Hard     |              |                        |
+| 0102  | [Binary Tree Level Order Traversal](#lc-102binary-tree-level-order-traversal) | https://leetcode.com/problems/binary-tree-level-order-traversal/ | _O(n)_ | _O(n)_ | Easy  |  |                        |
+| 0297  | [Serialize and Deserialize Binary Tree](#lc-297serialize-and-deserialize-binary-tree) | https://leetcode.com/problems/serialize-and-deserialize-binary-tree/ | _O(n)_ | _O(h)_ | Hard | LintCode | DFS |
+| 0572  | [Subtree of Another Tree](#lc-572subtree-of-another-tree) | https://leetcode.com/problems/construct-string-from-binary-tree/  | _O(m * n)_ | _O(h)_ | Easy     |              |                        |
+| 0105  | [Construct Binary Tree from Preorder and Inorder Traversal](#lc-105construct-binary-tree-from-preorder-and-inorder-traversal) | https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/ | _O(n)_ | _O(n)_ | Medium | | |
+| 0098  | [Validate Binary Search Tree](#lc-98validate-binary-search-tree) | https://leetcode.com/problems/validate-binary-search-tree/ | _O(n)_  | _O(1)_  | Medium     |              |                        |
+| 0230  | [Kth Smallest Element in a BST](#lc-230kth-smallest-element-in-a-bst) | https://leetcode.com/problems/kth-smallest-element-in-a-bst/ | _O(max(h, k))_ | _O(min(h, k))_ | Medium |    |                 |
+| 0235  | [Lowest Common Ancestor of a Binary Search Tree](#lc-235lowest-common-ancestor-of-a-binary-search-tree) | https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/ | _O(h)_ | _O(1)_ | Easy | EPI | |
+| 0208  | [Implement Trie (Prefix Tree)](#lc-208implement-trie-prefix-tree) | https://leetcode.com/problems/implement-trie-prefix-tree/ | _O(n)_  | _O(1)_  | Medium     |              | Trie                   |
+| 0211  | [Add and Search Word - Data structure design](#lc-211add-and-search-word-data-structure-design) | https://leetcode.com/problems/add-and-search-word-data-structure-design/ | _O(min(n, h))_ | _O(min(n, h))_ | Medium | | Trie, DFS |
+| 0212  | [Word Search II](#lc-212word-search-ii)        | https://leetcode.com/problems/word-search-ii/                                | _O(m * n * 3^h)_ | _O(t)_ | Hard | LintCode   | Trie, DFS              |
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+## Heap/Priority Queue
+| #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                            |
+| ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | ------------------------------- |
+| 0023  | [Merge k Sorted Lists](#lc23-merge-k-sorted-lists) | https://leetcode.com/problems/merge-k-sorted-lists/                       | _O(nlogk)_ | _O(1)_  | Hard       |              | Heap, Divide and Conquer        |
+| 0347  | [Top K Frequent Elements](#lc-347top-k-frequent-elements) | https://leetcode.com/problems/top-k-frequent-elements/             | _O(n)_   | _O(n)_    | Medium     |              | Quick Select, Heap, Bucket Sort |
+| 0295  | [Find Median from Data Stream](#lc-295find-median-from-data-stream) | https://leetcode.com/problems/find-median-from-data-stream/ | _O(nlogn)_ | _O(n)_  | Hard       | EPI, LintCode | BST, Heap                      |
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+## Binary Search
+| #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                  |
+| ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | --------------------- |
+| 0035  | [Search Insert Position](#lc35-search-insert-position) | https://leetcode.com/problems/search-insert-position/                 | _O(logn)_ | _O(1)_   | Medium     |              |                       |
+| 0153  | [Find Minimum in Rotated Sorted Array](#lc153-find-minimum-in-rotated-sorted-array) | https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/ | _O(logn)_ | _O(1)_   | Medium     |              |                       |
+| 0033  | [Search in Rotated Sorted Array](#lc33-search-in-rotated-sorted-array) | https://leetcode.com/problems/search-in-rotated-sorted-array/ | _O(logn)_ | _O(1)_   | Medium     | CTCI         |                       |
+| 1011  | [Capacity To Ship Packages Within D Days](#lc1011-capacity-to-ship-packages-within-d-days) | https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/ | _O(nlogr)_ | _O(1)_ | Medium     |              |                       |
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+## Recursion
+| #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                   |
+| ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | ---------------------- |
+| 0050  | [Pow(x, n)](#lc50-pow-x-n)                     | https://leetcode.com/problems/powx-n/                                         | _O(1)_ | _O(1)_  | Medium     |              |                        |
+| 0779  | [K-th Symbol in Grammar](#lc-779k-th-symbol-in-grammar) | https://leetcode.com/problems/k-th-symbol-in-grammar/                | _O(1)_ | _O(1)_  | Medium     |              |                        |
+| 0776  | [Split BST](#lc-776split-bst)                  | https://leetcode.com/problems/split-bst/                                      | _O(n)_ | _O(h)_  | Medium     | 🔒           |                        |
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+## Sliding Window
+| #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                   |
+| ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | ---------------------- |
+| 0003  | [Longest Substring Without Repeating Characters](#lc-3longest-substring-without-repeating-characters) | https://leetcode.com/problems/longest-substring-without-repeating-characters/ | _O(n)_   | _O(1)_    | Medium     |              |                        |
+| 0209  | [Minimum Size Subarray Sum](#lc-209minimum-size-subarray-sum) | https://leetcode.com/problems/minimum-size-subarray-sum/       | _O(n)_ | _O(1)_  | Medium     |       | Binary Search, Sliding Window |
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+## Greedy and Backtracking
+| #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                   |
+| ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | ---------------------- |
+| 0046  | [Permutations](#lc-46permutations)             | https://leetcode.com/problems/permutations/                                   | _O(n * n!)_  | _O(n)_ | Medium       |       |                        |
+| 0078  | [Subsets](#lc-79subsets)                       | https://leetcode.com/problems/subsets/                                        | _O(n * 2^n)_ | _O(1)_ | Medium       |       |                        |
+| 0039  | [Combination Sum](#lc-39combination-sum)       | https://leetcode.com/problems/combination-sum/                                | _O(k * n^k)_ | _O(k)_ | Medium       |       |                        |
+| 0022  | [Generate Parentheses](#lc-22generate-parentheses) | https://leetcode.com/problems/generate-parentheses/                       | _O(4^n / n^(3/2))_ | _O(n)_ | Medium |       |                        |
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
