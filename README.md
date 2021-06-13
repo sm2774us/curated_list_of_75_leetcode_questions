@@ -8775,7 +8775,7 @@ Observe how the cells move in groups when we rotate the image.
   | |  |       |      |       |  | |
   | |  +-------+------+-------+ _| |_
   | |  |  ___  |      |  ___  | \   /
-  |	|  | / 7 \ |  8   | / 9 \ |  \ /
+  | |  | / 7 \ |  8   | / 9 \ |  \ /
   +-+  | \___/ |      | \___/ |   *
        +-------+------+-------+
              /----------+
@@ -8917,7 +8917,7 @@ Approach-1: 4-Way Swap ( i.e., Rotate Groups of 4 Cells )
 ##############################################
 Time complexity  : O(M)   where M be the number of cells in the matrix.
                    or,
-				   O(N^2) where N is the length of each side of the matrix.
+                   O(N^2) where N is the length of each side of the matrix.
 
 As each cell is getting read once and written once.
 
@@ -8929,8 +8929,7 @@ Approach-2: Reverse on Diagonal and then Reverse Left to Right
 ##############################################
 Time complexity  : O(M)   where M be the number of cells in the matrix.
                    or,
-				   O(N^2) where N is the length of each side of the matrix.
-
+                   O(N^2) where N is the length of each side of the matrix.
 
 We perform two steps; transposing the matrix, and then reversing each row.
 Transposing the matrix has a cost of O(M) [ or, O(N^2) ], because we're moving the value of each cell once.
