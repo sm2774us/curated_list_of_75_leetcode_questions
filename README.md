@@ -16,7 +16,7 @@
 * [Matrix](#matrix)
 * [String](#string)
 * [Tree](#tree)
-* [Heap/Priority Queue](#heap-priority-queue)
+* [Heap/Priority Queue](#heappriority-queue)
 * [Binary Search](#binary-search)
 * [Recursion](#recursion)
 * [Sliding Window](#sliding-window)
@@ -276,7 +276,7 @@ TC: O(N^2) ... Test all pairs: O(N^2)
 SC: O(N)   ... Storing the result in a dictionary <key=<int, int>, value=count>.
                Considering all points are distinct we will have n entries in dictionary.
 ```
-##### Solution-1 ( Prefer this solution in an interview setting ).
+##### Approach-1 ( Prefer this solution in an interview setting ).
 ```python
 from typing import List
 
@@ -334,7 +334,7 @@ class Solution:
         # edge case: return 0 for 0 point, 1 for 1 point
         return max(map(len, pointsInLine.values())) if pointsInLine else len(points)
 ```
-##### Solution-2 ( Uses Python built-ins `math.gcd`, `itertools.combinations` and `collections.Counter.most_common` and data structures `collections.defaultdict` and `collections.Counter` ).
+##### Approach-2 ( Uses Python built-ins `math.gcd`, `itertools.combinations` and `collections.Counter.most_common` and data structures `collections.defaultdict` and `collections.Counter` ).
 ```python
 import collections
 from itertools import combinations
@@ -511,7 +511,7 @@ class Solution:
 <br/>
 
 #### [LC-372:Super Pow](https://leetcode.com/problems/super-pow/)
-##### Solution-1 ( Euler's theorem ).
+##### Approach-1 ( Euler's theorem ).
 ##### The Math Behind the Solution
 > ![equation](https://latex.codecogs.com/png.image?\dpi{150}%20a^{\Phi(n)}\equiv1)  `mod n`
 > where, ![equation](https://latex.codecogs.com/png.image?\dpi{150}%20\Phi(n)), is Euler's totient function.
@@ -607,7 +607,7 @@ class Solution:
 			
             return pow( base = a, exp = exponent % 1140, mod = 1337 )
 ```
-##### Solution-2 ( Modular Exponentiation ).
+##### Approach-2 ( Modular Exponentiation ).
 ##### Solution Explanation
 ```
 i)   It's useful in the field of public-key cryptography, https://en.wikipedia.org/wiki/Modular_exponentiation
@@ -659,7 +659,7 @@ class Solution:
 <br/>
 
 #### [LC-509:Fibonacci Number](https://leetcode.com/problems/fibonacci-number/)
-##### Solution-1 ( Using Binet's Formula or the Golden Ratio  ).
+##### Approach-1 ( Using Binet's Formula or the Golden Ratio  ).
 
 ##### The Math Behind the Solution
 * Calculating terms of the Fibonacci sequence can be tedious when using the recursive formula, especially when finding terms with a large n. 
@@ -690,7 +690,7 @@ class Solution:
         return round((phi ** N - (-phi) ** (-N)) / (5 ** 0.5))
 ```
 
-##### Solution-2 ( Using Tail Recursion  ).
+##### Approach-2 ( Using Tail Recursion  ).
 
 ##### Complexity Analysis
 ```
@@ -718,7 +718,7 @@ class Solution:
         return fib_helper(n)
 ```
 
-##### Solution-3 ( Using Matrix Exponentiation - DP ).
+##### Approach-3 ( Using Matrix Exponentiation - DP ).
 
 ##### Solution Explanation
 ```
@@ -816,7 +816,7 @@ class Solution:
 
 #### [LC-1390:Four Divisors](https://leetcode.com/problems/four-divisors/)
 
-##### Solution-1 ( Sieve of Eratosthenes ).
+##### Approach-1 ( Sieve of Eratosthenes ).
 ##### Solution Explanation
 ```
 Based on the property of prime number to count the divisors:
@@ -864,7 +864,7 @@ class Solution:
 			return 0
 ```
 
-##### Solution-2 ( Recursion ).
+##### Approach-2 ( Recursion ).
 ##### Solution Explanation
 ```
 Need to check up to floor(sqrt(num)) = s (inclusive) only because 
@@ -1434,7 +1434,7 @@ Space complexity : O(log(N))
 ========================
 Space Complexity : O(log(N)) since we are recursing and the call stack/number of recursive calls is of the order of log(N).
 ```
-##### Solution-1 ( Kadane's Algorithm ):
+##### Approach-1 ( Kadane's Algorithm ):
 ```python
 # If we are only interested in returning the sum of max sub-array
 def maxSubArray(nums: List[int]) -> int:
@@ -1531,7 +1531,7 @@ fun main(args: Array<String>) {
     println(maxSubArray(nums))
 }
 ```
-##### Solution-2 ( Divide and Conquer Algorithm ):
+##### Approach-2 ( Divide and Conquer Algorithm ):
 ```python
 def maxSubArray(nums: List[int]) -> int:
     def helper(nums, start, end):
@@ -8011,10 +8011,36 @@ fun removeNthFromEnd(head: ListNode?, n: Int): ListNode? {
 #### [LC-143:Reorder List](https://leetcode.com/problems/reorder-list/)
 ##### Solution Explanation:
 ```
+If you never solved singly linked lists problems before, or you do not have a lot of experience, this problem can be quite difficult.
+However if you already know all the tricks, it is not difficult at all.
+Let us first try to understand what we need to do.
+For list [1,2,3,4,5,6,7] we need to return [1,7,2,6,3,5,4]
+ We can note, that it is actually two lists [1,2,3,4] and [7,6,5], where elements are interchange.
+So, to succeed we need to do the following steps:
 
+ 1. Find the middle of or list - be careful, it needs to work properly both for even and for odd number of nodes.
+    For this we can either just count number of elements and then divide it by to, and do two traversals of list. 
+    Or we can use slow/fast iterators trick, where slow moves with speed 1 and fast moves with speed 2.
+    Then when fast reches the end, slow will be in the middle, as we need.
+ 2. Reverse the second part of linked list. Again, if you never done it before, it can be quite painful, 
+    please read oficial solution to problem 206. Reverse Linked List. The idea is to keep three pointers: 
+    prev, curr, nextt stand for previous, current and next and change connections in place.
+    Do not forget to use slow.next = None, in opposite case you will have list with loop.
+ 3. Finally, we need to merge two lists, given its heads. These heads are denoted by head and prev, so for simplicity 
+    I created head1 and head2 variables. What we need to do now is to interchange nodes: we put head2 
+    as next element of head1 and then say that head1 is now head2 and head2 is previous head1.next.
+    In this way we do one step for one of the lists and rename lists, 
+    so next time we will take element from head2, then rename again and so on.
 ```
 ##### Complexity Analysis:
 ```
+TC: O(N)
+SC: O(1)
+
+Time Complexity: Time complexity is O(n), because we first do O(n) iterations to find middle, then we do O(n) iterations to reverse second half 
+and finally we do O(n) iterations to merge lists. 
+
+Space complexity is O(1).
 ```
 ```python
 import unittest
@@ -8154,6 +8180,1037 @@ fun reorderList(head: ListNode?) {
 | 0054  | [Spiral Matrix](#lc-54spiral-matrix)           | https://leetcode.com/problems/spiral-matrix/                                  | _O(m * n)_ | _O(1)_  | Medium     |              |                        |
 | 0048  | [Rotate Image](#lc-48rotate-image)             | https://leetcode.com/problems/rotate-image/                                   | _O(n^2)_   | _O(1)_  | Medium     |              |                        |
 | 0079  | [Word Search](#lc-79word-search)               | https://leetcode.com/problems/word-search/                                    | _O(m * n * 3^l)_ | _O(l)_ | Medium |             |                        |
+
+#### [LC-73:Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes/)
+##### Solution Explanation:
+```
+Note: m = number of rows, n = number of cols
+
+===========================================
+Brute force using O(m*n) space: 
+===========================================
+The initial approach is to start with creating another matrix to store the result.
+From doing that, you'll notice that we want a way to know when each row and col should be changed to zero.
+We don't want to prematurely change the values in the matrix to zero because as we go through it, we might change a row to 0 because of the new value.
+
+Time Complexity: O(m*n(m+n))
+===========================================
+Because we are not tracking the rows and columns which we have already set to 0. In the worst case, every element in original matrix would be 0.
+
+===========================================
+Approach-1
+===========================================
+More optimized using O(m + n) space: 
+===========================================
+Intuition
+-------------------------------------------
+If any cell of the matrix has a zero we can record its row and column number. 
+All the cells of this recorded row and column can be marked zero in the next iteration.
+-------------------------------------------
+
+To do better, we want O(m + n). How do we go about that? Well, we really just need a way to track if any row or any col has a zero,
+because then that means the entire row or col has to be zero. Ok, well, then we can use an array to track the zeroes for the row and zeros for the col. 
+Whenever we see a zero, just set that row or col to be True.
+
+Space: O(m + n) for the zeroes_row and zeroes_col array.
+
+===========================================
+Approach-2
+===========================================
+Most optimized using O(1) space: 
+===========================================
+Intuition
+-------------------------------------------
+Rather than using additional variables to keep track of rows and columns to be reset,
+we use the matrix itself as the indicators.
+-------------------------------------------
+
+But, we can do even better, O(1) - initial ask of the problem.
+What if instead of having a separate array to track the zeroes, we simply use the first row or col to track them 
+and then go back to update the first row and col with zeroes after we're done replacing it?
+The approach to get constant space is to use first row and first col of the matrix as a tracker.
+
+At each row or col, if you see a zero, then mark the first row or first col as zero with the current row and col.
+Then iterate through the array again to see where the first row and col were marked as zero and then set that row/col as 0.
+After doing that, you'll need to traverse through the first row and/or first col 
+if there were any zeroes there to begin with and set everything to be equal to 0 in the first row and/or first col.
+
+Time complexity for all Solutions 1 and 2 is O(m * n).
+
+Space: O(1) for modification in place and using the first row and first col to keep track of zeros instead of zeroes_row and zeroes_col
+```
+##### Complexity Analysis:
+```
+===========================================
+Approach-1
+===========================================
+More optimized using O(m + n) space: 
+===========================================
+Time  : O(m * n) where M and N are the number of rows and columns respectively.
+Space : O(m + n) for the zeroes_row and zeroes_col array.
+
+===========================================
+Approach-2
+===========================================
+Most optimized using O(1) space: 
+===========================================
+Time  : O(m * n) where M and N are the number of rows and columns respectively.
+Space : O(1)
+```
+```python
+from typing import List
+#===========================================
+#Approach-1
+#===========================================
+#More optimized using O(m + n) space: 
+#===========================================
+class Solution:
+    # TC : O(m * n) where M and N are the number of rows and columns respectively.
+    # SC : O(m + n) for the zeroes_row and zeroes_col array.
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        # input validation
+        if not matrix:
+            return []
+
+        m = len(matrix)
+        n = len(matrix[0])
+
+         zeroes_row = [False] * m
+         zeroes_col = [False] * n
+         for row in range(m):
+             for col in range(n):
+                 if matrix[row][col] == 0:
+                     zeroes_row[row] = True
+                     zeroes_col[col] = True
+
+         for row in range(m):
+             for col in range(n):
+                 if zeroes_row[row] or zeroes_col[col]:
+                     matrix[row][col] = 0
+
+#===========================================
+#Approach-2
+#===========================================
+#Most optimized using O(1) space: 
+#===========================================
+class Solution:
+    # TC : O(m * n) where M and N are the number of rows and columns respectively.
+    # SC : O(1)
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+
+        m = len(matrix)
+        n = len(matrix[0])
+		
+        first_row_has_zero = False
+        first_col_has_zero = False
+        
+        # iterate through matrix to mark the zero row and cols
+        for row in range(m):
+            for col in range(n):
+                if matrix[row][col] == 0:
+                    if row == 0:
+                        first_row_has_zero = True
+                    if col == 0:
+                        first_col_has_zero = True
+                    matrix[row][0] = matrix[0][col] = 0
+    
+        # iterate through matrix to update the cell to be zero if it's in a zero row or col
+        for row in range(1, m):
+            for col in range(1, n):
+                matrix[row][col] = 0 if matrix[0][col] == 0 or matrix[row][0] == 0 else matrix[row][col]
+        
+        # update the first row and col if they're zero
+        if first_row_has_zero:
+            for col in range(n):
+                matrix[0][col] = 0
+        
+        if first_col_has_zero:
+            for row in range(m):
+                matrix[row][0] = 0
+```
+```kotlin
+fun setZeroes(matrix: Array<IntArray>): Unit {
+    val m = matrix.size; val n = matrix[0].size
+    var r0 = false; var c0 = false
+
+    for (i in 0..m - 1) {
+        for (j in 0..n - 1) {
+            if (matrix[i][j] == 0) {
+                if (i == 0) r0 = true
+                if (j == 0) c0 = true
+                matrix[i][0] = 0
+                matrix[0][j] = 0
+            }
+        }
+    }
+
+    for (i in 1..m - 1) {
+        for (j in 1..n - 1) {
+            if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                matrix[i][j] = 0
+            }
+        }
+    }
+
+    if (r0) {
+        for (i in 0..n - 1)
+            matrix[0][i] = 0
+    }
+
+    if (c0) {
+        for (i in 0..m - 1)
+            matrix[i][0] = 0
+    }        
+}
+```
+
+#### [LC-54:Spiral Matrix](https://leetcode.com/problems/spiral-matrix/)
+##### Solution Explanation:
+```
+##############################################
+Approach-1: Simulation
+##############################################
+Intuition
+----------------------------------------------
+Draw the path that the spiral makes. We know that the path should turn clockwise
+whenever it would go out of bounds or into a cell that was previously visited.
+----------------------------------------------
+Algorithm
+----------------------------------------------
+We simulate how a person would draw a spiral path through the matrix. This solution uses 4 boundary pointers to iterate through the matrix in a spiral fashion.
+
+We move in set order of directions and make a small adjustment to change direction. The implementation is tedious. I have provided a visual walkthrough below.
+
+1. from first_row go left last_col bounary hit then adjust first_row boundary
+2. from last_col go down until last_row bounary hit then adjust last_col boundary
+3. from last_row go right until first_col boundary hit then adjust last_row boundary
+4. from first_col up until first_row boundary hit then adjust first_col boundary
+
+We always follow this same procedure. When any boundary overlaps we are finished.
+
+After each loop a boundary is adjusted. that is why there are explicit conditionals to make sure the indexes do not go out of bounds.
+----------------------------------------------
+Visual Walkthrough
+----------------------------------------------
+These diagrams show the adjustment of the boundaries after we iterate through a row or a column.
+
+collect first row
+[0,0],[0,1],[0,2],[0,3],[0,4]
+
++---------------+                                          +-----------+
+|               |                                          |  last_col |
+| M x N = 4 x 5 |    +-----------+                         +-----------+
+|               |    | first_col |
++---------------+    +-----------+
+                          0         1         2         3         4
+    +-----------+    +---------+---------+---------+---------+---------+
+    | first_row | 0  |----a----|----b----|----c----|----d----|----e--->|
+    +-----------+    |         |         |         |         |         |
+	                 +---------+---------+---------+---------+---------+
+                  1  |    f    |    g    |    h    |    i    |    j    |
+                     |         |         |         |         |         |
+	                 +---------+---------+---------+---------+---------+
+                  2  |    m    |    n    |    o    |    p    |    q    |
+                     |         |         |         |         |         |
+                     +---------+---------+---------+---------+---------+
+    +-----------+ 3  |    r    |    s    |    t    |    u    |    v    |
+	|  last_row |    |         |         |         |         |         |
+    +-----------+    +---------+---------+---------+---------+---------+
+	
+
+adjust first_row boundary, go down and collect last_col
+[1,4],[2,4],[3,4]
+
+                     +-----------+                         +-----------+
+                     | first_col |                         |  last_col |
+                     +-----------+                         +-----------+
+                          0         1         2         3         4
+                     +---------+---------+---------+---------+---------+
+                  0  |----a----|----b----|----c----|----d----|----e--->|
+                     |         |         |         |         |         |
+	+-----------+    +---------+---------+---------+---------+----|----+
+    | first_row | 1  |    f    |    g    |    h    |    i    |    j    |
+    +-----------+    |         |         |         |         |    |    |
+	                 +---------+---------+---------+---------+----|----+
+                  2  |    m    |    n    |    o    |    p    |    q    |
+                     |         |         |         |         |    |    |
+                     +---------+---------+---------+---------+----|----+
+    +-----------+ 3  |    r    |    s    |    t    |    u    |    v    |
+	|  last_row |    |         |         |         |         |   \|/   |
+    +-----------+    +---------+---------+---------+---------+----*----+
+
+adjust last_col boundary, go right and collect last_row
+[3,3],[3,2],[3,1][3,0]
+
+                     +-----------+               +-----------+
+                     | first_col |               |  last_col |
+                     +-----------+               +-----------+
+                          0         1         2         3         4
+                     +---------+---------+---------+---------+---------+
+                  0  |----a----|----b----|----c----|----d----|----e--->|
+                     |         |         |         |         |         |
+	+-----------+    +---------+---------+---------+---------+----|----+
+    | first_row | 1  |    f    |    g    |    h    |    i    |    j    |
+    +-----------+    |         |         |         |         |    |    |
+	                 +---------+---------+---------+---------+----|----+
+                  2  |    m    |    n    |    o    |    p    |    q    |
+                     |         |         |         |         |    |    |
+                     +---------+---------+---------+---------+----|----+
+    +-----------+ 3  |<---r----|----s----|----t----|----u----|    v    |
+	|  last_row |    |         |         |         |         |   \|/   |
+    +-----------+    +---------+---------+---------+---------+----*----+
+
+adjust last_row boundary, go up and collect first_col
+[2,0],[1,0]
+
+                     +-----------+               +-----------+
+                     | first_col |               |  last_col |
+                     +-----------+               +-----------+
+                          0         1         2         3         4
+                     +---------+---------+---------+---------+---------+
+                  0  |----a----|----b----|----c----|----d----|----e--->|
+                     |         |         |         |         |         |
+	+-----------+    +----*----+---------+---------+---------+----|----+
+    | first_row | 1  |   /f\   |    g    |    h    |    i    |    j    |
+    +-----------+    |    |    |         |         |         |    |    |
+	+-----------+    +----|----+---------+---------+---------+----|----+
+    |  last_row | 2  |    m    |    n    |    o    |    p    |    q    |
+    +-----------+    |    |    |         |         |         |    |    |
+                     +----|----+---------+---------+---------+----|----+
+                  3  |<---r----|----s----|----t----|----u----|    v    |
+	                 |         |         |         |         |   \|/   |
+                     +---------+---------+---------+---------+----*----+
+
+adjust first_col boundary, go and collect first_row
+[1,1],[1,2],[1,3]
+
+                             +-----------+       +-----------+
+                             | first_col |       |  last_col |
+                             +-----------+       +-----------+
+                          0         1         2         3         4
+                     +---------+---------+---------+---------+---------+
+                  0  |----a----|----b----|----c----|----d----|----e--->|
+                     |         |         |         |         |         |
+	+-----------+    +----*----+---------+---------+---------+----|----+
+    | first_row | 1  |   /f\   |----g----|----h----|----i--->|    j    |
+    +-----------+    |    |    |         |         |         |    |    |
+	+-----------+    +----|----+---------+---------+---------+----|----+
+    |  last_row | 2  |    m    |    n    |    o    |    p    |    q    |
+    +-----------+    |    |    |         |         |         |    |    |
+                     +----|----+---------+---------+---------+----|----+
+                  3  |<---r----|----s----|----t----|----u----|    v    |
+	                 |         |         |         |         |   \|/   |
+                     +---------+---------+---------+---------+----*----+
+
+
+adjust first_row and go collect last_col
+[2,3]
+
+                                       +-----------+       +-----------+
+                                       | first_col |       |  last_col |
+                                       +-----------+       +-----------+
+                                    0         1         2         3         4
+                               +---------+---------+---------+---------+---------+
+                            0  |----a----|----b----|----c----|----d----|----e--->|
+                               |         |         |         |         |         |
+	                           +----*----+---------+---------+---------+----|----+
+                            1  |   /f\   |----g----|----h----|----i--->|    j    |
+							   |    |    |         |         |         |    |    |
++-----------+ +-----------+    +----|----+---------+---------+----|----+----|----+
+| first_row | |  last_row | 2  |    m    |    n    |    o    |    p    |    q    |
++-----------+ +-----------+    |    |    |         |         |   \|/   |    |    |
+                               +----|----+---------+---------+----*----+----|----+
+                            3  |<---r----|----s----|----t----|----u----|    v    |
+	                           |         |         |         |         |   \|/   |
+                               +---------+---------+---------+---------+----*----+
+
+adjust last_col and go collect last_row
+[2,2],[2,1]
+                                       +-----------+       +-----------+
+                                       | first_col |       |  last_col |
+                                       +-----------+       +-----------+
+                                    0         1         2         3         4
+                               +---------+---------+---------+---------+---------+
+                            0  |----a----|----b----|----c----|----d----|----e--->|
+                               |         |         |         |         |         |
+	                           +----*----+---------+---------+---------+----|----+
+                            1  |   /f\   |----g----|----h----|----i--->|    j    |
+							   |    |    |         |         |         |    |    |
++-----------+ +-----------+    +----|----+---------+---------+----|----+----|----+
+| first_row | |  last_row | 2  |    m    |<---n----|----o----|    p    |    q    |
++-----------+ +-----------+    |    |    |         |         |   \|/   |    |    |
+                               +----|----+---------+---------+----*----+----|----+
+                            3  |<---r----|----s----|----t----|----u----|    v    |
+	                           |         |         |         |         |   \|/   |
+                               +---------+---------+---------+---------+----*----+
+							   
+adjust last_row. adjust first_col
+
+                                                 +-----------+
+                                                 | first_col |
+                                                 +-----------+												 
+                                                 +-----------+
+                                                 |  last_col |
+                                                 +-----------+
+                          0         1         2         3         4
+                     +---------+---------+---------+---------+---------+
+                  0  |----a----|----b----|----c----|----d----|----e--->|
+                     |         |         |         |         |         |
+	+-----------+    +----*----+---------+---------+---------+----|----+
+    |  last_row | 1  |   /f\   |----g----|----h----|----i--->|    j    |
+    +-----------+    |    |    |         |         |         |    |    |
+    +-----------+    +----|----+---------+---------+----|----+----|----+
+    | first_row | 2  |    m    |<---n----|----o----|    p    |    q    |
+    +-----------+    |    |    |         |         |   \|/   |    |    |
+                     +----|----+---------+---------+----*----+----|----+
+                  3  |<---r----|----s----|----t----|----u----|    v    |
+	                 |         |         |         |         |   \|/   |
+                     +---------+---------+---------+---------+----*----+
+
+here is a video that really helped cement my understanding.
+
+https://www.youtube.com/watch?v=TmweBVEL0I0
+
+##############################################
+Approach-2: Layer-By-Layer
+##############################################
+Intuition
+----------------------------------------------
+The idea is to peel the the matrix layer by layer.
+
+The answer will be all the elements in clockwise order from the first-outer layer,
+followed by the elements from the second-outer layer, and so on.
+----------------------------------------------
+----------------------------------------------
+Algorithm
+----------------------------------------------
+We define the k-th outer layer of a matrix as all elements that have minimum distance 
+to some border equal to k. For example, the following matrix has all elements in the 
+first-outer layer equal to 1, all elements in the second-outer layer equal to 2,
+and all elements in the third-outer layer equal to 3.
+
+[[1, 1, 1, 1, 1, 1, 1],
+ [1, 2, 2, 2, 2, 2, 1],
+ [1, 2, 3, 3, 3, 2, 1],
+ [1, 2, 2, 2, 2, 2, 1],
+ [1, 1, 1, 1, 1, 1, 1]]
+ 
+For each outer layer, we want to iterate through its elements in clockwise order starting from the top left corner.
+Suppose the current outer layer has top-left coordinates (r1, c1) 
+and bottom-right coordinates (r2, c2).
+
+Then, the top row is the set of elements (r1, c) for c = c1,...,c2, in that order.
+The rest of the right side is the set of elements (r, c2) for r = r1+1,...,r2, in that order.
+Then, if there are four sides to this layer (ie., r1 < r2 and c1 < c2),
+we iterate through the bottom side and left side as shown in the solutions below.
+
+[[1, 1, 1, 1, 1, 1, 1],          top: c from c1 ... c2
+ [1, 2, 2, 2, 2, 2, 1],          right: r from r1+1 ... r2
+ [1, 2, 3, 3, 3, 2, 1],          bottom: c from c2+1 ... c1+2
+ [1, 2, 2, 2, 2, 2, 1],          left: r from r2+1 ... r1+1
+ [1, 1, 1, 1, 1, 1, 1]]
+
+```
+##### Complexity Analysis:
+```
+##############################################
+Approach-1: Simulation
+##############################################
+Time Complexity : O(N), where N is the total number of elements in the input matrix.
+
+We add every element in the matrix to our final answer.
+
+Space Complexity: O(N) if the output list is taken into account.
+                  O(1) without considering the output list , i.e., spiral_order,
+				  since we don't use any additional data structures for our computations.
+
+##############################################
+Approach-2: Layer-By-Layer
+##############################################
+Time Complexity: O(N), where N is the total number of elements in the input matrix.
+
+We add every element in the matrix to our final answer.
+
+Space Complexity: O(N) if the output list is taken into account.
+                  O(1) without considering the output list , i.e., spiral_order,
+                  since we don't use any additional data structures for our computations.
+
+```
+```python
+# ------------------------------------------------
+# Approach-1: Simulation
+# ------------------------------------------------
+from typing import List
+
+class Solution:
+    # TC: O(N)
+	# SC: O(N) { O(1) without considering the output list , i.e., spiral_order }
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+		m, n = len(matrix), len(matrix[0])
+        i, first_row, first_col = 0, 0, 0
+        last_row, last_col = m - 1, n - 1
+        spiral_order = []
+        # until a boundary overlaps
+        while first_row <= last_row and first_col <= last_col:
+            #left 
+            for i in range(first_row, last_col + 1): 
+                spiral_order.append(matrix[first_row][i])
+            first_row += 1
+            #down
+            for i in range(first_row, last_row + 1): 
+                spiral_order.append(matrix[i][last_col])
+            last_col -= 1
+            # right
+            if first_row <= last_row:
+                i = last_col
+                while i >= first_col:
+                    spiral_order.append(matrix[last_row][i])
+                    i -= 1
+                last_row -= 1
+             # up
+            if first_col <= last_col:
+                i = last_row 
+                while i >= first_row:
+                    spiral_order.append(matrix[i][first_col])
+                    i -= 1 
+                first_col += 1
+        
+        return spiral_order
+
+# ------------------------------------------------
+# Approach-2: Layer-By-Layer
+# ------------------------------------------------
+from typing import List
+
+class Solution:
+    # TC: O(N)
+	# SC: O(N) { O(1) without considering the output list , i.e., spiral_order }
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        res = []
+        while matrix:
+            try:
+                res.extend(matrix.pop(0)) #left to right
+                for row in matrix: #top to down
+                    res.extend([row.pop(-1)])
+                res.extend(matrix.pop(-1)[::-1]) #bottom row, but [::-1] (reverse of list) ==> right to left
+                for row in matrix[::-1]: #down to top
+                    res.extend([row.pop(0)])
+            except: continue
+        
+        return res
+```
+```kotlin
+fun spiralOrder(matrix: Array<IntArray>): List<Int> {
+    if (matrix.isEmpty() || matrix[0].isEmpty()) return emptyList()
+
+    val result = arrayListOf<Int>()
+
+    var rowBegin = 0
+    var rowEnd = matrix.size - 1
+    var columnBegin = 0
+    var columnEnd = matrix[0].size - 1
+
+    while (rowBegin <= rowEnd && columnBegin <= columnEnd) {
+        for (i in columnBegin..columnEnd)
+            result.add(matrix[rowBegin][i])
+        rowBegin++
+
+        for (i in rowBegin..rowEnd)
+            result.add(matrix[i][columnEnd])
+        columnEnd--
+
+        if (rowBegin <= rowEnd) {
+            for (i in columnEnd downTo columnBegin)
+                result.add(matrix[rowEnd][i])
+            rowEnd--
+        }
+        if (columnBegin <= columnEnd) {
+            for (i in rowEnd downTo rowBegin)
+                result.add(matrix[i][columnBegin])
+            columnBegin++
+        }
+    }
+    return result
+}
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+#### [LC-48:Rotate Image](https://leetcode.com/problems/rotate-image/)
+##### Bonus Question:
+```
+Bonus Question: If you're not too confident with matrices and linear algebra, get some more practice by also coding a method that 
+transposes the matrix on the other diagonal, and another that reflects from top to bottom. You can test your functions by printing 
+out the matrix before and after each operation. Finally, use your functions to find three more solutions to this problem.
+Each solution uses two matrix operations.
+```
+##### Interview Tip:
+> **Interview Tip:** Terrified of being asked this question in an interview?
+> Many people are: it can be intimidating due to the fiddly logic. Unfortunately, if you do a lot of interviewing,
+> the probability of seeing it at least once is high, and some people have claimed to have seen it multiple times!
+> This is one of the few questions where I recommend practicing until you can confidently code it 
+> and explain it without thinking too much.
+>
+##### Solution Explanation:
+```
+##############################################
+Approach-1: 4-Way Swap ( i.e., Rotate Groups of 4 Cells )
+##############################################
+Intuition
+----------------------------------------------
+Observe how the cells move in groups when we rotate the image.
+              +---------\
+              +---------/
+       +-------+------+-------+
+	   |  ___  |      |  ___  |
+	   | / 1 \ |  2   | / 3 \ |
+   *   | \___/ |      | \___/ |  +-+
+  /	\  +-------+------+-------+  | |
+ /_ _\ |       |      |       |  | |
+  | |  |   4   |  5   |   6   |  | |
+  | |  |       |      |       |  | |
+  | |  +-------+------+-------+ _| |_
+  | |  |  ___  |      |  ___  | \   /
+  |	|  | / 7 \ |  8   | / 9 \ |  \ /
+  +-+  | \___/ |      | \___/ |   *
+       +-------+------+-------+
+             /----------+
+	         \----------+
+
+We can iterate over each group of four cells and rotate them.
+----------------------------------------------
+Algorithm
+----------------------------------------------
+The trick here is to realize that cells in our matrix (M) can be swapped out in groups of four in a self-contained manner.
+This will allow us to keep our space complexity down to O(1).
+
+The remaining difficulty lies in setting up our nested for loops to accomplish the entirety of these four-way swaps.
+If we consider each ring of data as a larger iteration, we can notice that each successive ring shortens in the length of its side by 2.
+This means that we will need to perform this process to a maximum depth of floor(n / 2) times.
+We can use floor here because the center cell of an odd-sided matrix will not need to be swapped.
+
+For each ring, we'll need to perform a number of iterations equal to the length of the side minus 1,
+since we will have already swapped the far corner as our first iteration.
+As noticed earlier, the length of the side of a ring is shortened by 2 
+for each layer of depth we've achieved (len = n - 2 * i - 1).
+
+Inside the nested for loops, we need to perform a four-way swap between the linked cells.
+In order to save on some processing, we can store the value 
+of the opposite side of i (opp = n - 1 - i) as that value will be reused many times over.
+
+  +----+----+----+----+----+  +----+----+----+----+----+ +----+----+----+----+----+
+  |****|****|****|****|****|  |****|____|____|___\|****| |    |****|    |    |    |
+  |****|****|****|****|****|  |****|    |    |   /|****| |    |****|`   |    |    |
+  +----+----+----+----+----+  +--+-+----+----+----+----+ +----+->--+--`-+----+----+
+  |****|    |    |    |****|  | /|\|    |    |    | +  | |    |/   |    |`   |****|
+  |****|    |    |    |****|  |  | |    |    |    | |  | |    /    |    |  ->|****|
+  +----+----+----+----+----+  +----+----+----+----+----+ +---/+----+----+----+----+
+  |****|    |    |    |****|  |  | |    |    |    | |  | |  / |    |    |    |  / | 
+  |****|    |    |    |****|  |  | |    |    |    | |  | | /  |    |    |    | /  |
+  +----+----+----+----+----+  +----+----+----+----+----+ +----+---+----+----+/---+
+  |****|    |    |    |****|  |  | |    |    |    | |  | |****<-   |    |    /    |
+  |****|    |    |    |****|  |  | |    |    |    |\|/ | |****|  ` |    |   /|    |
+  +----+----+----+----+----+  +----+----+----+----+-+--+ +----+----`----+--<-+----+
+  |****|****|****|****|****|  |****|/___|____|____|****| |    |    | `  |****|    |
+  |****|****|****|****|****|  |****|\   |    |    |****| |    |    |   `|****|    |
+  +----+----+----+----+----+  +----+----+----+----+----+ +----+----+----+----+----+ 
+             i=0                          j=0                        j=1
+               +----+----+----+----+----+  +----+----+----+----+----+
+			   |    |    |****|    |    |  |    |    |    |****|    |
+               |    |  ->|****|\   |    |  |    |  +-|--->|****|    |
+               +----+-/--+----+-\--+----+  +----+-/--+----+----+----+
+               |    |/   |    |  \ |    |  |****|/   |    |  \ |    |
+               |    /    |    |   +|    |  |**<+|    |    |   \|    |
+               +---/+----+----+---|+----+  +---|+----+----+----\----+
+               |****|    |    |   +>****|  |   +|    |    |    |\   |
+               |****<+    |    |   |****|  |    \    |    |    |+   |
+               +----+|---+----+----+/---+  +----+\---+----+----+|---+
+			   |    |+   |    |    /    |  |    | \  |    |    |+>**|
+			   |    | \  |    |   /|    |  |    |  \ |    |   /|****|
+               +----+--\-+----+--/-+----+  +----+----+----+--/-+----+
+			   |    |   \|****|<-  |    |  |    |****|<---|-+  |    |
+			   |    |    \****|    |    |  |    |****|    |    |    |
+               +----+----+----+----+----+  +----+----+----+----+----+
+			               j=2                         j=3
+  +----+----+----+----+----+  +----+----+----+----+----+ +----+----+----+----+----+
+  |    |    |    |    |    |  |    |    |    |    |    | |    |    |    |    |    |
+  |    |    |    |    |    |  |    |    |    |    |    | |    |    |    |    |    |
+  +----+----+----+----+----+  +----+----+----+----+----+ +----+----+----+----+----+
+  |    |****|****|****|    |  |    |****|____|\***|    | |    |    |****|    |    |
+  |    |****|****|****|    |  |    |****|    |/***|    | |    |   +>****-+   |    |
+  +----+----+----+----+----+  +----+-+--+----+--|-+----+ +----+---|+----+|---+----+
+  |    |****|    |****|    |  |    |/ \ |    |  | |    | |    |****|    |+>**|    |
+  |    |****|    |****|    |  |    | |  |    | \|/|    | |    |**<+|    |****|    |
+  +----+----+----+----+----+  +----+-|--+----+--+-+----+ +----+---|+----+|---+----+
+  |    |****|****|****|    |  |    |***/|____|****|    | |    |   +-****<+   |    |
+  |    |****|****|****|    |  |    |***\|    |****|    | |    |    |****|    |    |
+  +----+----+----+----+----+  +----+----+----+--+-+----+ +----+----+----+----+----+
+  |    |    |    |    |    |  |    |    |    |    |    | |    |    |    |    |    |
+  |    |    |    |    |    |  |    |    |    |    |    | |    |    |    |    |    |
+  +----+----+----+----+----+  +----+----+----+----+----+ +----+----+----+----+----+
+              i=1                         j=0                        j=1
+##############################################
+Approach-2: Reverse on Diagonal and then Reverse Left to Right
+            ( or transpose and reflect in Linear Algebra )
+##############################################
+Intuition
+----------------------------------------------
+The most elegant solution for rotating the matrix is to firstly reverse 
+the matrix around the main diagonal, and then reverse it from left to right. 
+These operations are called transpose and reflect in linear algebra.
+----------------------------------------------
+Algorithm Visualization
+----------------------------------------------
+           Original                             Transposed                        Transposed+Reversed
+     0    1   2    3    4                  0    1   2    3    4                   0    1   2    3    4
+  +----+----+----+----+----+            +----+----+----+----+----+             +----+----+----+----+----+
+  |  1 | 2  | 3  | 4  |  5 |            |  1 | 6  | 11 | 16 | 21 |             | 21 | 16 | 11 | 6  | 1  |
+  |    |    |    |    |    | Transpose  |    |    |    |    |    |  Reverse    |    |    |    |    |    |
+  +----+----+----+----+----+ ---------> +----+----+----+----+----+ --------->  +----+----+----+----+----+
+  |  6 | 7  | 8  | 9  | 10 |            |  2 | 7  | 12 | 17 | 22 |             | 22 | 17 | 12 | 7  | 2  |
+  |    |    |    |    |    |            |    |    |    |    |    |             |    |    |    |    |    | 
+  +----+----+----+----+----+            +----+----+----+----+----+             +----+----+----+----+----+
+  | 11 | 12 | 13 | 14 | 15 |            |  3 | 8  | 13 | 18 | 23 |             | 23 | 18 | 13 | 8  | 3  |
+  |    |    |    |    |    |            |    |    |    |    |    |             |    |    |    |    |    |
+  +----+----+----+----+----+            +----+----+----+----+----+             +----+----+----+----+----+
+  | 16 | 17 | 18 | 19 | 20 |            |  4 | 9  | 14 | 19 | 24 |             | 24 | 19 | 14 | 9  | 4  |
+  |    |    |    |    |    |            |    |    |    |    |    |             |    |    |    |    |    |
+  +----+----+----+----+----+            +----+----+----+----+----+             +----+----+----+----+----+
+  | 21 | 22 | 23 | 24 | 25 |            |  5 | 10 | 15 | 20 | 25 |             | 25 | 20 | 15 | 10 | 5  |
+  |    |    |    |    |    |            |    |    |    |    |    |             |    |    |    |    |    |
+  +----+----+----+----+----+            +----+----+----+----+----+             +----+----+----+----+----+
+
+          Rotated                                            Transposed + Reversed
+     0    1   2    3    4                                    0    1   2    3    4
+  +----+----+----+----+----+                              +----+----+----+----+----+
+  | 21 | 16 | 11 | 6  | 1  |                              | 21 | 16 | 11 | 6  | 1  |
+  |    |    |    |    |    |                              |    |    |    |    |    |
+  +----+----+----+----+----+               =              +----+----+----+----+----+
+  | 22 | 17 | 12 | 7  | 2  |             EQUAL            | 22 | 17 | 12 | 7  | 2  |
+  |    |    |    |    |    |                              |    |    |    |    |    |
+  +----+----+----+----+----+                              +----+----+----+----+----+
+  | 23 | 18 | 13 | 8  | 3  |                              | 23 | 18 | 13 | 8  | 3  |
+  |    |    |    |    |    |                              |    |    |    |    |    |
+  +----+----+----+----+----+                              +----+----+----+----+----+
+  | 24 | 19 | 14 | 9  | 4  |                              | 24 | 19 | 14 | 9  | 4  |
+  |    |    |    |    |    |                              |    |    |    |    |    |
+  +----+----+----+----+----+                              +----+----+----+----+----+
+  | 25 | 20 | 15 | 10 | 5  |                              | 25 | 20 | 15 | 10 | 5  |  
+  |    |    |    |    |    |                              |    |    |    |    |    |
+  +----+----+----+----+----+                              +----+----+----+----+----+
+
+NOTE:
+------
+Even though this approach does twice as many reads and writes as approach 1,
+most people would consider it a better approach because the code is simpler,
+and it is built with standard matrix operations that can be found in any matrix library.
+
+```
+##### Complexity Analysis:
+```
+##############################################
+Approach-1: 4-Way Swap ( i.e., Rotate Groups of 4 Cells )
+##############################################
+Time complexity  : O(M)   where M be the number of cells in the matrix.
+                   or,
+				   O(N^2) where N is the length of each side of the matrix.
+
+As each cell is getting read once and written once.
+
+Space complexity : O(1) because we do not use any other additional data structures.
+
+##############################################
+Approach-2: Reverse on Diagonal and then Reverse Left to Right
+            ( or transpose and reflect in Linear Algebra )
+##############################################
+Time complexity  : O(M)   where M be the number of cells in the matrix.
+                   or,
+				   O(N^2) where N is the length of each side of the matrix.
+
+
+We perform two steps; transposing the matrix, and then reversing each row.
+Transposing the matrix has a cost of O(M) [ or, O(N^2) ], because we're moving the value of each cell once.
+Reversing each row also has a cost of O(M) [ or, O(N^2) ], because again we're moving the value of each cell once.
+
+Space complexity : O(1) because we do not use any other additional data structures.
+```
+```python
+# Approach-1: 4-Way Swap ( i.e., Rotate Groups of 4 Cells )
+from typing import List
+
+class Solution:
+    # TC: O(M)   where M be the number of cells in the matrix.
+    #     or,
+    #     O(N^2) where N is the length of each side of the matrix.
+    #
+    # SC: O(1)
+    def rotate(self, M: List[List[int]]) -> None:
+        n = len(M)
+        depth = n // 2
+        for i in range(depth):
+            rlen, opp = n - 2 * i - 1, n - 1 - i
+            for j in range(rlen):
+                temp = M[i][i+j]
+                M[i][i+j] = M[opp-j][i]
+                M[opp-j][i] = M[opp][opp-j]
+                M[opp][opp-j] = M[i+j][opp]
+                M[i+j][opp] = temp
+
+# Approach-2: Reverse on Diagonal and then Reverse Left to Right
+#             ( or transpose and reflect in Linear Algebra )
+from typing import List
+
+class Solution:
+    # TC: O(M)   where M be the number of cells in the matrix.
+    #     or,
+    #     O(N^2) where N is the length of each side of the matrix.
+    #
+    # SC: O(1)
+    def rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        def transpose(arr): 
+            for i in range(len(arr)): 
+                for j in range(i, len(arr[0])): 
+                    arr[i][j], arr[j][i] = arr[j][i], arr[i][j]
+
+        def flip_by_symmetry(mat):
+            for j in range(len(mat[0]) // 2):
+                for i in range(len(mat)):
+                    mat[i][j], mat[i][-(j + 1)] = mat[i][-(j + 1)], mat[i][j]
+                    
+        transpose(matrix)
+        flip_by_symmetry(matrix)
+
+    # NOTE: If you want counter-clockwise then switch the order of transpose and reflect operations.
+    #       I.e.,   Clockwise rotate = Transpose and then Reflect
+    #               Counter-Clockwise rotate = Reflect and then Transpose.
+    def anti_rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        def transpose(arr): 
+            for i in range(len(arr)): 
+                for j in range(i, len(arr[0])): 
+                    arr[i][j], arr[j][i] = arr[j][i], arr[i][j]
+
+        def flip_by_symmetry(mat):
+            for j in range(len(mat[0]) // 2):
+                for i in range(len(mat)):
+                    mat[i][j], mat[i][-(j + 1)] = mat[i][-(j + 1)], mat[i][j]
+                    
+        flip_by_symmetry(matrix)
+        transpose(matrix)
+```
+```kotlin
+fun transpose(matrix: Array<IntArray>) {
+    for (i in matrix.indices)
+        for (j in i..matrix[i].lastIndex)
+            matrix[i][j] = matrix[j][i].also { matrix[j][i] = matrix[i][j] }
+}
+    
+fun reverse(matrix: Array<IntArray>) {
+    val n = matrix.size
+    for (i in matrix.indices)
+        for (j in 0 until n / 2)
+            matrix[i][j] = matrix[i][n-j-1].also { matrix[i][n-j-1] = matrix[i][j] }
+}
+
+# Clockwise
+fun rotate(matrix: Array<IntArray>): Unit {
+    transpose(matrix)
+    reverse(matrix)
+}
+
+# Counter-Clockwise
+fun anti_rotate(matrix: Array<IntArray>): Unit {
+    reverse(matrix)
+    transpose(matrix)
+}
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+#### [LC-79:Word Search](https://leetcode.com/problems/word-search/)
+##### Solution Explanation:
+```
+##############################################
+Approach-1: DFS Backtracking Solution
+##############################################
+In general I think this problem do not have polynomial solution,
+so we need to check a lot of possible options.
+What should we use in this case: it is bruteforce, with backtracking.
+Let dfs(ind, i, j) be our backtracking function, where i and j are coordinates of cell we are currently in 
+and ind is index of letter in word we currently in.
+Then our dfs algorithm will look like:
+
+1. First, we have self.Found variable, which helps us to finish earlier if we already found solution.
+2. Now, we check if ind is equal to k - number of symbols in word. If we reach this point, it means we found word, so we put self.Found to True and return back.
+3. If we go outside our board, we return back.
+4. If symbol we are currently on in words is not equal to symbol in table, we also return back.
+5. Then we visit all neibours, putting board[i][j] = "#" before - we say in this way, that this cell was visited and changing it back after.
+
+What concerns main function, we need to start dfs from every cell of our board and also I use early stopping if we already found word.
+
+Complexity: Time complexity is potentially O(m*n*3^k), where k is length of word and m and n are sizes of our board: 
+we start from all possible cells of board, and each time (except first) we can go in 3 directions (we can not go back). 
+In practice however this number will be usually much smaller, because we have a lot of dead-ends. 
+
+Space complexity is O(k) - potential size of our recursion stack.
+##############################################
+Approach-2: DFS Backtracking Solution w/ Pre-Check optimization
+##############################################
+Same as Approach-1 but with Pre-Check optimization.
+
+Complexity is the same as Approach-1.
+```
+##### Complexity Analysis:
+```
+For both approaches:
+
+TC : O(m*n*3^k)
+
+Time complexity is potentially O(m*n*3^k), where k is length of word and m and n are sizes of our board: 
+we start from all possible cells of board, and each time (except first) we can go in 3 directions (we can not go back). 
+In practice however this number will be usually much smaller, because we have a lot of dead-ends. 
+
+SC : O(k)
+
+Potential size of our recursion stack.
+```
+```python
+# -----------------------------------------------
+# Approach-1: DFS Backtracking Solution
+# -----------------------------------------------
+from typing import List
+
+class Solution:
+    # TC : O(m*n*3^k)
+    # SC : O(k)
+    #
+    # where k is length of word and m and n are sizes of our board.
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        def dfs(ind, i, j):
+            if self.Found: return        #early stop if word is found
+
+            if ind == k:
+                self.Found = True                #for early stopping
+                return 
+
+            if i < 0 or i >= m or j < 0 or j >= n: return 
+            tmp = board[i][j]
+            if tmp != word[ind]: return
+
+            board[i][j] = "#"
+            for x, y in [[0,-1], [0,1], [1,0], [-1,0]]:
+                dfs(ind + 1, i+x, j+y)
+            board[i][j] = tmp
+        
+        self.Found = False
+        m, n, k = len(board), len(board[0]), len(word)
+        
+        for i, j in product(range(m), range(n)):
+            if self.Found: return True          #early stop if word is found
+            dfs(0, i, j)
+        return self.Found
+
+# -----------------------------------------------
+# Approach-2: DFS Backtracking Solution w/ Pre-Check optimization
+# -----------------------------------------------
+from collections import Counter
+from typing import List
+
+class Solution:
+    # TC : O(m*n*3^k)
+    # SC : O(k)
+    #
+    # where k is length of word and m and n are sizes of our board.
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        """72ms! Beats 98.21% of submissions as of 23 March, 2019.
+        Time Complexity: Still O(mn*4^k) where board is m*n in size, and word length = k.
+        Uses a pre-check to skip execution for boards without the required characters.
+        Uses a DFS otherwise, with 4 branches, and a depth of k, the length of the word.
+        """
+        def pre_check():
+            """Checks whether board has all the characters required in word
+            """
+            chars_required = Counter(word)
+            
+            # Mark down the characters required, if they appear in the board
+            for row in board:
+                for char in row:
+                    if char in chars_required and chars_required[char] > 0: 
+                        chars_required[char] -= 1
+            
+            # Ensure the board has all of the characters required for the word
+            for count in chars_required.values():
+                if count > 0: 
+                    return False
+            return True
+
+        # pre_check is a great trick to boost the performance for this problem.
+		# It can be simplified into one line
+        #def pre_check():
+        #    if Counter(word) - Counter(sum(board, [])): return False
+
+        def path_exists(char_ind, x, y):
+            """DFS checking for path existence. 
+            """
+            # Reject case
+            if board[x][y] != word[char_ind]:
+                return False
+            
+            # Base case
+            elif char_ind == l - 1:
+                return True
+            
+            # Recursive Case
+            char_ind += 1
+
+            # Temporarily mark the board position with None
+            board[x][y] = None
+
+            # Check each possible direction
+            for d in [(0, 1),(0, -1),(1, 0),(-1, 0)]:
+                next_x, next_y = x + d[0], y + d[1]
+                # Only explore the move if it's valid and hasn't already been explored
+                if -1 < next_x < m and -1 < next_y < n and board[next_x][next_y]: 
+                    if path_exists(char_ind, next_x, next_y): 
+                        return True
+
+            # Change the board back to its original character
+            board[x][y] = word[char_ind - 1]
+            return False
+
+        # Initial Checks
+        if not board: 
+            return False
+        if not word: 
+            return True
+        if not pre_check(): 
+            return False
+        
+        # Check paths starting from each character in the board
+        m, n, l = len(board), len(board[0]), len(word)
+        for i in range(m):
+            for j in range(n):
+                if path_exists(0, i, j): 
+                    return True
+
+        # False if no such path exists.
+        return False
+```
+```kotlin
+```
 
 <br/>
 <div align="right">
