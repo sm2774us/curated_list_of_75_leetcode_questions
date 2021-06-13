@@ -8176,7 +8176,7 @@ fun reorderList(head: ListNode?) {
 ## Matrix
 | #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                   |
 | ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | ---------------------- |
-| 0073  | [Set Matrix Zeroes](#lc-73set-matrix-seroes)   | https://leetcode.com/problems/set-matrix-zeroes/                              | _O(m * n)_ | _O(1)_  | Medium     |              |                        |
+| 0073  | [Set Matrix Zeroes](#lc-73set-matrix-zeroes)   | https://leetcode.com/problems/set-matrix-zeroes/                              | _O(m * n)_ | _O(1)_  | Medium     |              |                        |
 | 0054  | [Spiral Matrix](#lc-54spiral-matrix)           | https://leetcode.com/problems/spiral-matrix/                                  | _O(m * n)_ | _O(1)_  | Medium     |              |                        |
 | 0048  | [Rotate Image](#lc-48rotate-image)             | https://leetcode.com/problems/rotate-image/                                   | _O(n^2)_   | _O(1)_  | Medium     |              |                        |
 | 0079  | [Word Search](#lc-79word-search)               | https://leetcode.com/problems/word-search/                                    | _O(m * n * 3^l)_ | _O(l)_ | Medium |             |                        |
