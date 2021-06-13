@@ -1251,25 +1251,41 @@ fun main(args: Array<String>) {
 #### [LC-238:Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/)
 ##### Solution Explanation
 ```
-Approach: Rolling Twice Algorithm
 =================================================================================================================================================================
+Approach 1: Left and Right Arrays that capture the multiplication product scanning from left-to-right or right-to-left.
+=================================================================================================================================================================
+- We maintain a left and right array that captures the multiplication product scanning from left-to-right or right-to-left.
+- The time complexity is two linear traversals, thus it's linear time.
 
-Thought Process:
----------------------------
-- Look at the example array -> [1, 2, 3, 4]
-- Somehow realize that:
-  + output[i] = product([i+1:]) * product([:i])
-  + which means output[i] = "product of all elements left of i" * "product of all elements right of i"
-- Realize that we can find find "left products" and "right products" by iterating back and forth across the array.
-  + Realize that we can store the left products in output (counts as constant space as per problem constraints) and compute the running right product and store it in a variable right (allows for constant space) as we iterate from the back of the input array to the front.
-- Come up with Pseudocode:
-  + Iterate through nums while computing "left products" and save them in the output array
-  + Then, while going from right to left across the arrays:
-    => store the running "right product" in a variable right
-    => compute output[i] as we iterate
+- The tricky part is to keep a multiplicative counter with result till its previous element (not its self),
+  and assign this value on to its left/right_array.
+
+=================================================================================================================================================================
+Approach 2: Optimized Space Solution. Without using extra memory of left and right product list.
+=================================================================================================================================================================
+Step 1. Create a list that contains the product of all left side elements except the current index of nums element.
+Step 2. Create a variable of the right product and multiply with what we have in Step 1 (List that contains all the
+        left side produts except the current index itself) through the loop --> this will calculate the product of
+        array except for self.
+Step 3. Keep updating the right product and loop.
+Step 4. Return the answer.
 ```
 ##### Complexity Analysis:
 ```
+=================================================================================================================================================================
+Approach 1: Left and Right Arrays that capture the multiplication product scanning from left-to-right or right-to-left.
+=================================================================================================================================================================
+Time complexity : O(N) [ Technically O(2N) ]
+========================
+We traverse the list containing N elements twice. Each look up in the list costs only O(1) time.
+
+Space complexity : O(1) [ As per problem, the output array does not count as extra space for space complexity analysis. ]
+========================
+Constant space since we only create a single output array to store the results.
+
+=================================================================================================================================================================
+Approach 2: Optimized Space Solution. Without using extra memory of left and right product list.
+=================================================================================================================================================================
 Time complexity : O(N) [ Technically O(2N) ]
 ========================
 We traverse the list containing N elements twice. Each look up in the list costs only O(1) time.
@@ -1280,37 +1296,100 @@ Constant space since we only create a single output array to store the results.
 ```
 ```python
 from typing import List
+import unittest
 
-def productExceptSelf(nums: List[int]) -> List[int]:
-    if not nums: return []
-    size = len(nums)
+class Solution(object):
+    #
+    # -------------------------------------------------------------------------------------------------------------------------
+    # Approach 1: Left and Right Arrays that capture the multiplication product scanning from left-to-right or right-to-left.
+    # -------------------------------------------------------------------------------------------------------------------------
+    #
+    # TC: O(N)
+    # SC: O(N)
+    def productExceptSelf_Solution_1(self, nums: List[int]) -> List[int]:
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        if not nums: return []
         
-    # create a list for output
-    product_excluding_self = [ 1 for i in range(size) ]
+        l = len(nums)
+        left_arr, right_arr, left, right = [1]*l, [1]*l, 1, 1
         
-    # Step_#1
-    # record product of terms on the left hand side        
-    for i in range( 1, size ):
-        product_excluding_self[i] = product_excluding_self[i-1] * nums[i-1]
-     
-    # Step_#2
-    # Update array elements as the product of ( product of left hand side ) * ( produt of right hand side )
-    product_of_right_hand_side = 1
-    for j in reversed( range( size) ):
-        product_excluding_self[j] *= product_of_right_hand_side
-        product_of_right_hand_side *= nums[j]
+        for i in range(1, l):
+            left *= nums[i-1]
+            left_arr[i] = left
         
-    return product_excluding_self
+        for j in range(l-2, -1, -1):
+            right *= nums[j+1]
+            right_arr[j] = right
+        
+        return [tup[0]*tup[1] for tup in zip(left_arr, right_arr)]
+
+    #
+    # -------------------------------------------------------------------------------------------------------------------------
+    # Approach 2: Optimized Space Solution. Without using extra memory of left and right product list.
+    # -------------------------------------------------------------------------------------------------------------------------
+    # TC: O(N)
+    # SC: O(1) [ excluding the output/result array, which does not count towards extra space, as per problem description. ]
+    def productExceptSelf_Solution_2(self, nums: List[int]) -> List[int]:
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        length_of_list = len(nums)
+		result = [0]*length_of_list
+		
+        # update result with left product.
+        result[0] = 1
+        for i in range(1, length_of_list):
+            result[i] = result[i-1] * nums[i-1]
+
+        right_product = 1
+        for i in reversed(range(length_of_list)):
+            result[i] = result[i] * right_product
+			right_product *= nums[i]
+
+        return result
+
+class Test(unittest.TestCase):
+    def setUp(self) -> None:
+        pass
+
+    def tearDown(self) -> None:
+        pass
+
+    def test_reverseList(self) -> None:
+        sol = Solution()
+        for nums, solution in (
+            [
+                [1,2,3,4],
+                [24,12,8,6],
+            ],
+            [
+                [-1,1,0,-3,3],
+                [0,0,9,0,0]
+            ]
+        ):
+            self.assertEqual(
+                sol.productExceptSelf_Solution_1(nums),
+                solution
+            )
+            self.assertEqual(
+                sol.productExceptSelf_Solution_2(nums),
+                solution
+            )
 
 if __name__ == "__main__":
-    #Input: nums = [1,2,3,4]
-    #Output: [24,12,8,6]
-    nums = [1,2,3,4]
-    print(productExceptSelf(nums))
-    #Input: nums = [-1,1,0,-3,3]
-    #Output: [0,0,9,0,0]
-    nums = [-1,1,0,-3,3]
-    print(productExceptSelf(nums))
+    ##Input: nums = [1,2,3,4]
+    ##Output: [24,12,8,6]
+    #nums = [1,2,3,4]
+    #print(productExceptSelf(nums))
+    ##Input: nums = [-1,1,0,-3,3]
+    ##Output: [0,0,9,0,0]
+    #nums = [-1,1,0,-3,3]
+    #print(productExceptSelf(nums))
+	unittest.main()
 ```
 ```kotlin
 fun productExceptSelf(nums: IntArray): IntArray {
@@ -10699,6 +10778,222 @@ fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
 </div>
 <br/>
 
+####  [LC-226:Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-124:Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-102:Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-297:Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-572:Subtree of Another Tree](https://leetcode.com/problems/construct-string-from-binary-tree/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-105:Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-98:Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-230:Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-235:Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-208:Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-211:Add and Search Word - Data structure design](https://leetcode.com/problems/add-and-search-word-data-structure-design/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-212:Word Search II](https://leetcode.com/problems/word-search-ii/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
 
 ## Heap/Priority Queue
 | #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                            |
@@ -10706,6 +11001,54 @@ fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
 | 0023  | [Merge k Sorted Lists](#lc23-merge-k-sorted-lists) | https://leetcode.com/problems/merge-k-sorted-lists/                       | _O(nlogk)_ | _O(1)_  | Hard       |              | Heap, Divide and Conquer        |
 | 0347  | [Top K Frequent Elements](#lc-347top-k-frequent-elements) | https://leetcode.com/problems/top-k-frequent-elements/             | _O(n)_   | _O(n)_    | Medium     |              | Quick Select, Heap, Bucket Sort |
 | 0295  | [Find Median from Data Stream](#lc-295find-median-from-data-stream) | https://leetcode.com/problems/find-median-from-data-stream/ | _O(nlogn)_ | _O(n)_  | Hard       | EPI, LintCode | BST, Heap                      |
+
+####  [LC-23:Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-347:Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-295:Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/) 
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
 
 <br/>
 <div align="right">
@@ -10721,6 +11064,72 @@ fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
 | 0033  | [Search in Rotated Sorted Array](#lc33-search-in-rotated-sorted-array) | https://leetcode.com/problems/search-in-rotated-sorted-array/ | _O(logn)_ | _O(1)_   | Medium     | CTCI         |                       |
 | 1011  | [Capacity To Ship Packages Within D Days](#lc1011-capacity-to-ship-packages-within-d-days) | https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/ | _O(nlogr)_ | _O(1)_ | Medium     |              |                       |
 
+####  [LC-35:Search Insert Position](https://leetcode.com/problems/search-insert-position/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-153:Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-33:Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/) | 
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-1011:Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+```kotlin
+```
+
 <br/>
 <div align="right">
     <b><a href="#algorithms">⬆️ Back to Top</a></b>
@@ -10734,6 +11143,48 @@ fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
 | 0779  | [K-th Symbol in Grammar](#lc-779k-th-symbol-in-grammar) | https://leetcode.com/problems/k-th-symbol-in-grammar/                | _O(1)_ | _O(1)_  | Medium     |              |                        |
 | 0776  | [Split BST](#lc-776split-bst)                  | https://leetcode.com/problems/split-bst/                                      | _O(n)_ | _O(h)_  | Medium     | 🔒           |                        |
 
+####  [LC-50:Pow(x, n)](https://leetcode.com/problems/powx-n/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-779:K-th Symbol in Grammar](https://leetcode.com/problems/k-th-symbol-in-grammar/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-776:Split BST](https://leetcode.com/problems/split-bst/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+
 <br/>
 <div align="right">
     <b><a href="#algorithms">⬆️ Back to Top</a></b>
@@ -10745,6 +11196,32 @@ fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
 | ----- | ---------------------------------------------- | ----------------------------------------------------------------------------- | ------ | ------- | ---------- | ------------ | ---------------------- |
 | 0003  | [Longest Substring Without Repeating Characters](#lc-3longest-substring-without-repeating-characters) | https://leetcode.com/problems/longest-substring-without-repeating-characters/ | _O(n)_   | _O(1)_    | Medium     |              |                        |
 | 0209  | [Minimum Size Subarray Sum](#lc-209minimum-size-subarray-sum) | https://leetcode.com/problems/minimum-size-subarray-sum/       | _O(n)_ | _O(1)_  | Medium     |       | Binary Search, Sliding Window |
+
+####  [LC-3:Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-209:Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
 
 <br/>
 <div align="right">
@@ -10759,6 +11236,64 @@ fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
 | 0078  | [Subsets](#lc-79subsets)                       | https://leetcode.com/problems/subsets/                                        | _O(n * 2^n)_ | _O(1)_ | Medium       |       |                        |
 | 0039  | [Combination Sum](#lc-39combination-sum)       | https://leetcode.com/problems/combination-sum/                                | _O(k * n^k)_ | _O(k)_ | Medium       |       |                        |
 | 0022  | [Generate Parentheses](#lc-22generate-parentheses) | https://leetcode.com/problems/generate-parentheses/                       | _O(4^n / n^(3/2))_ | _O(n)_ | Medium |       |                        |
+
+####  [LC-46:Permuations](https://leetcode.com/problems/permutations/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-78:Subsets](https://leetcode.com/problems/subsets/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-39:Combination Sum](https://leetcode.com/problems/combination-sum/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
+####  [LC-22:Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)
+##### Solution Explanation:
+```
+```
+##### Complexity Analysis:
+```
+```
+```python
+```
 
 <br/>
 <div align="right">
