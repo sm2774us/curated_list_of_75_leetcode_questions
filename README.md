@@ -10408,11 +10408,297 @@ fun main(args: Array<String>) {
 | 0211  | [Add and Search Word - Data structure design](#lc-211add-and-search-word-data-structure-design) | https://leetcode.com/problems/add-and-search-word-data-structure-design/ | _O(min(n, h))_ | _O(min(n, h))_ | Medium | | Trie, DFS |
 | 0212  | [Word Search II](#lc-212word-search-ii)        | https://leetcode.com/problems/word-search-ii/                                | _O(m * n * 3^h)_ | _O(t)_ | Hard | LintCode   | Trie, DFS              |
 
+####  [LC-104:Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+##### Solution Explanation:
+```
+1) Depth First Search: Post Order
+- Empty tree i.e. root is None: Depth = 0
+- maxDepth(root) = max(maxDepth(root.left), maxDepth(root.right)) + 1
+- Time and Space Complexity: O(N)
+
+2) Depth First Search: PreOrder
+- Perform pre-order traversal and pass a variable to track the level
+- Time and Space Complexity: O(N)
+
+3) Depth First Search: Iterative Version
+- Push the root and the level on the stack.
+- Pop and push left and right kids of root. Update the max_level variable.
+- Time and Space Complexity: O(N)
+
+4) Breadth First Search: Iterative Version
+- At every level, "queue" ends up being a list of all the nodes at that level.
+  We increase the depth till the time "queue" is an empty list.
+- Time and Space Complexity: O(N)
+```
+##### Complexity Analysis:
+```
+TC: O(N)
+SC: O(N)
+
+TC: Best case O(logN)
+    Worst case O(N)
+	
+so typically between O(N) and O(logN)
+
+SC:  Best case O(logN)
+     Worst case O(N)
+
+so typically between O(N) and O(logN)
+	
+In the worst case, the tree is completely unbalanced, e.g. each node has only left child node, 
+the recursion call would occur N times (the height of the tree), therefore the storage to keep the call stack would be O(N).
+But in the best case (the tree is completely balanced), the height of the tree would be log(N).
+Therefore, the space complexity in this case would be O(log(N)).
+
+NOTE: big-O complexity is asking for the worst case.
+```
+```python
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+# 1) Depth First Search: Post Order
+class Solution_DFS_Post_Order(object):
+    def maxDepth(self, root: TreeNode) -> int:
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if root is None:
+            return 0
+        return max(self.maxDepth(root.left), self.maxDepth(root.right)) + 1
+
+# 2) Depth First Search: PreOrder
+from collections import deque
+class Solution_DFS_Pre_Order(object):
+    def maxDepth(self, root: TreeNode) -> int:
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        q, depth = deque(), 0
+        if root:
+            q.append(root)
+        while len(q):
+            depth += 1
+            for _ in range(len(q)):
+                x = q.popleft()
+                if x.left:
+                    q.append(x.left)
+                if x.right:
+                    q.append(x.right)
+        return depth
+
+# 3) Depth First Search: Iterative Version
+class Solution_DFS_Iterative(object):
+    def maxDepth(self, root: TreeNode) -> int:
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        st, max_level = [], 0
+        if root:
+            st.append((root, 1))
+        while st:
+            x, level = st.pop()
+            max_level = max(max_level, level)
+            if x.left:
+                st.append((x.left, level+1))
+            if x.right:
+                st.append((x.right, level+1))
+        return max_level
+		
+# 4) Breadth First Search: Iterative Version
+from collections import  deque
+
+class Solution_BFS_Iterative(object):
+    def maxDepth(self, root: TreeNode) -> int:
+        if root is None:
+            return 0
+        queue = deque()
+        queue.append(root)
+        depth = 0
+        while queue:
+            depth += 1
+            l = len(queue)
+            for i in range(l):
+                cur_root = queue.popleft()
+                if cur_root.left:
+                    queue.append(cur_root.left)
+                if cur_root.right:
+                    queue.append(cur_root.right)
+        return depth
+		
+# w/o using deque
+class Solution_BFS_Iterative(object):
+    def maxDepth(self, root: TreeNode) -> int:
+        if root is None:
+            return 0
+        queue = [root]
+        depth = 0
+        while queue:
+            depth += 1
+            for i in range(len(queue)):
+                cur_root = queue.pop(0)
+                if cur_root.left:
+                    queue.append(cur_root.left)
+                if cur_root.right:
+                    queue.append(cur_root.right)
+        return depth
+```
+```kotlin
+fun maxDepth(root: TreeNode?): Int = when(root) {
+    null -> 0
+    else -> 1 + maxOf(maxDepth(root.left), maxDepth(root.right))
+}
+```
+
 <br/>
 <div align="right">
     <b><a href="#algorithms">⬆️ Back to Top</a></b>
 </div>
 <br/>
+
+####  [LC-100:Same Tree](https://leetcode.com/problems/same-tree/)
+##### Solution Explanation:
+```
+###########
+Approach-1 : Recursion
+###########
+---------------
+Intuition
+---------------
+The simplest strategy here is to use recursion. Check if p and q nodes are not None, and their values are equal.
+If all checks are OK, do the same for the child nodes recursively.
+
+###########
+Approach-2 : Iterative
+###########
+---------------
+Intuition
+---------------
+
+Start from the root and then at each iteration pop the current node out of the deque. Then do the same checks as in the approach 1 :
+
+ * p and p are not None,
+ * p.val is equal to q.val,
+
+and if checks are OK, push the child nodes.
+```
+##### Complexity Analysis:
+```
+###########
+Approach-1 : Recursion
+###########
+Time complexity  : O(N)
+
+                   where N is a number of nodes in the tree, since one visits each node exactly once.
+
+Space complexity : O(N)
+
+                   O(log(N)) in the best case of completely balanced tree and O(N) in the worst case of completely unbalanced tree, 
+                   to keep a recursion stack.
+
+
+###########
+Approach-2 : Iterative
+###########
+Time complexity  : O(N)
+
+                   where N is a number of nodes in the tree, since one visits each node exactly once.
+
+Space complexity : O(N)
+
+                   O(log(N)) in the best case of completely balanced tree and O(N) in the worst case of completely unbalanced tree, 
+                   to keep a recursion stack.
+```
+```python
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+###########
+# Approach-1 : Recursion
+###########
+class Solution_Recursive:
+    def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
+        """
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: bool
+        """    
+        # p and q are both None
+        if not p and not q:
+            return True
+        # one of p and q is None
+        if (not q or not p) or (p.val != q.val):
+            return False
+        return self.isSameTree(p.right, q.right) and self.isSameTree(p.left, q.left)
+
+###########
+# Approach-2 : DFS Iterative
+###########
+# DFS
+class Solution_DFS_Iterative:
+    def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
+        """
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: bool
+        """    
+        stack =[(p,q)]
+        while stack:
+            p,q = stack.pop()
+            if not p and not q:
+                continue
+            elif (not p or not q) or (p.val !=q.val):
+                return False
+            stack.extend([(q.right,p.right),(q.left,p.left)])
+        return True
+
+###########
+# Approach-3 : BFS Iterative
+###########
+# BFS
+import collections
+
+class Solution_BFS_Iterative:
+    def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
+        queue = collections.deque([p,q])
+        while queue:
+            p,q = queue.popleft()
+            if not p and not q:
+                continue
+            elif (not p or not q) or (p.val != q.val):
+                return False
+            queue.extend([(p.left,q.left),(p.right,q.right)])
+        return True
+```
+```kotlin
+// Definition for a binary tree node.
+class TreeNode(var `val`: Int) {
+    var left: TreeNode? = null
+    var right: TreeNode? = null
+}
+fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
+    if (p == null && q == null) return true
+
+    return (p?.`val` == q?.`val`) && isSameTree(p?.left, q?.left) && isSameTree(p?.right, q?.right)        
+}
+```
+
+<br/>
+<div align="right">
+    <b><a href="#algorithms">⬆️ Back to Top</a></b>
+</div>
+<br/>
+
 
 ## Heap/Priority Queue
 | #     | Title	                                         | url                                                                           | Time   | Space   | Difficulty | Tag	        | Note                            |
