@@ -1,8 +1,8 @@
 # LeetCode Curated List of 75 Problems.
-[Leetcode Article Reference](https://leetcode.com/discuss/general-discussion/460599/blind-75-leetcode-questions)
-[Github Gist](https://gist.github.com/krishnadey30/88c4e2f601e96597974c00185e479532)
-[Leetcode List](https://leetcode.com/list/xi4ci4ig/)
-[Hackernoon - 14 Patterns to Ace Any Coding Interview Question](https://hackernoon.com/14-patterns-to-ace-any-coding-interview-question-c5bb3357f6ed)
+* [Leetcode Article Reference](https://leetcode.com/discuss/general-discussion/460599/blind-75-leetcode-questions)
+* [Github Gist](https://gist.github.com/krishnadey30/88c4e2f601e96597974c00185e479532)
+* [Leetcode List](https://leetcode.com/list/xi4ci4ig/)
+* [Hackernoon - 14 Patterns to Ace Any Coding Interview Question](https://hackernoon.com/14-patterns-to-ace-any-coding-interview-question-c5bb3357f6ed)
 
 ## Algorithms
 
@@ -11240,6 +11240,7 @@ fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
 ####  [LC-46:Permuations](https://leetcode.com/problems/permutations/)
 ##### Solution Explanation:
 ```
+
 ```
 ##### Complexity Analysis:
 ```
